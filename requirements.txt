@@ -1,0 +1,23 @@
+# Node.js runtime dependencies
+express           # Web framework for Node.js
+cors              # Cross-Origin Resource Sharing middleware
+sqlite3           # SQLite database driver
+nodemailer        # Handles emails (confirmation, messages, bookings)
+dotenv            # Manage environment variables (API keys, secrets)
+bcryptjs          # authentication for an admin dashboard.
+jsonwebtoken      # secure admin routes (like seeing all messages).
+googleapis        # Official Google API client
+
+# Node.js dev dependencies (for testing)
+nodemon           # Auto-reload server during development
+jest              # JavaScript testing framework
+supertest         # HTTP assertions for testing APIs Endpoints
+cross-env         # set environment variables in a cross-platform way (Windows/Linux/macOS).
+
+
+#Run-Time 
+
+npm install express bcryptjs jsonwebtoken cors sqlite3 nodemailer dotenv googleapis
+
+#Dev/Test 
+npm install --save-dev nodemon jest supertest cross-env 

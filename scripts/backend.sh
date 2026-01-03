@@ -34,8 +34,8 @@ EOL
 
 # Install dependencies
 pip install pip-tools
-pip-compile requirements.in
-pip-compile requirements-dev.in
+pip-compile requirements.in -o requirements.lock
+pip-compile requirements-dev.in 
 
 pip-sync requirements.txt requirements-dev.txt
 

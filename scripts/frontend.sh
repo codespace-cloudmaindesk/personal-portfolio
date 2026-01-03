@@ -20,4 +20,4 @@ npm install -D prettier eslint-config-prettier eslint-plugin-react-hooks
 npm install -D husky lint-staged
 
 # Initialize Husky
-npx husky-init && npm install
+npx husky init 

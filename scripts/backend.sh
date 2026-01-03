@@ -4,8 +4,8 @@ cd backend
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-# Create requirements.txt
-cat > requirements.txt << EOL
+# Create requirements.in
+cat > requirements.in << EOL
 fastapi>=0.110.0
 uvicorn[standard]>=0.27.0
 sqlalchemy>=2.0.25

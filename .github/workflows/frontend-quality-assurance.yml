@@ -1,0 +1,33 @@
+name: Reusable Workflow – Frontend Quality Assurance Pipeline
+
+on:
+  workflow_call:
+
+jobs:
+  frontend_code_quality_and_tests:
+    name: Frontend QA – Dependency Install, Linting, and Unit Testing
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: Retrieve repository source code
+        uses: actions/checkout@v4
+
+      - name: Configure Node.js runtime (v22) with npm dependency caching
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install frontend dependencies using clean install
+        run: npm ci
+
+      - name: Perform static code analysis using ESLint
+        run: npm run lint
+
+      - name: Execute frontend automated unit test suite
+        run: npm test

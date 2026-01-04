@@ -15,36 +15,36 @@ jobs:
       - name: Retrieve repository source code
         uses: actions/checkout@v4
 
-      - name: Configure secure SSH authentication for deployment server
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
+      # # - name: Configure secure SSH authentication for deployment server
+      # #   uses: webfactory/ssh-agent@v0.9.0
+      # #   with:
+      # #     ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
 
-      - name: Deploy application containers using Docker Compose
-        run: |
-          ssh -o StrictHostKeyChecking=no \
-          ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
+      # - name: Deploy application containers using Docker Compose
+      #   run: |
+      #     ssh -o StrictHostKeyChecking=no \
+      #     ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
 
-            set -e
+      #       set -e
 
-            echo "Starting production deployment for Personal Portfolio"
+      #       echo "Starting production deployment for Personal Portfolio"
 
-            cd /var/www/personal-portfolio || exit
+      #       cd /var/www/personal-portfolio || exit
 
-            echo "Synchronizing source code with main branch"
-            git pull origin main
+      #       echo "Synchronizing source code with main branch"
+      #       git pull origin main
 
-            echo "Pulling latest container images"
-            docker compose pull
+      #       echo "Pulling latest container images"
+      #       docker compose pull
 
-            echo "Building updated container images"
-            docker compose build
+      #       echo "Building updated container images"
+      #       docker compose build
 
-            echo "Restarting production services"
-            docker compose up -d --remove-orphans
+      #       echo "Restarting production services"
+      #       docker compose up -d --remove-orphans
 
-            echo "Cleaning up unused Docker images"
-            docker image prune -f
+      #       echo "Cleaning up unused Docker images"
+      #       docker image prune -f
 
-            echo "Production deployment completed successfully"
-          EOF
+      #       echo "Production deployment completed successfully"
+      #     EOF

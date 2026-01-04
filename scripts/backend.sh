@@ -18,7 +18,7 @@ python-multipart>=0.0.9
 aiosqlite>=0.19.0
 python-dotenv>=1.0.1
 httpx>=0.26.0
-pillow>=10.2.0
+pillow>=10.3.0
 python-slugify>=8.0.4
 EOL
 

@@ -37,7 +37,7 @@ pip install pip-tools
 pip-compile requirements.in
 pip-compile requirements-dev.in 
 
-pip-sync requirements.txt requirements-dev.txt
+pip-sync requirements.lock requirements-dev.txt
 
 # Initialize Alembic(Database migrations)
 alembic init alembic

@@ -1,5 +1,5 @@
 import pytest
-from settings import Settings
+from app.core.config import Settings
 
 ENV_VARS = {
     "PROJECT_NAME": "Test API",
@@ -16,6 +16,7 @@ ENV_VARS = {
     "RATE_LIMIT_LOGIN": "5",
 }
 
+
 def test_settings_load(monkeypatch):
     for k, v in ENV_VARS.items():
         monkeypatch.setenv(k, v)
@@ -23,7 +24,11 @@ def test_settings_load(monkeypatch):
     assert settings.PROJECT_NAME == "Test API"
     assert settings.DEBUG is True
     assert settings.ACCESS_TOKEN_EXPIRE_MINUTES == 30
-    assert settings.BACKEND_CORS_ORIGINS == ["http://localhost:3000", "http://localhost:5173"]
+    assert settings.BACKEND_CORS_ORIGINS == [
+        "http://localhost:3000",
+        "http://localhost:5173",
+    ]
+
 
 def test_missing_required_field(monkeypatch):
     for k in ENV_VARS.keys():

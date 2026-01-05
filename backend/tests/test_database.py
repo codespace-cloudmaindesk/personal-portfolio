@@ -1,9 +1,11 @@
 import pytest
+from importlib import reload
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.exc import SQLAlchemyError
-from app.db import database
+from app import database
 from contextlib import contextmanager
+
 
 @contextmanager
 def override_database_url(url: str):
@@ -30,12 +32,15 @@ def override_database_url(url: str):
         database.DATABASE_URL = original_url
         database.engine = create_engine(
             original_url,
-            connect_args={"check_same_thread": False} if "sqlite" in original_url else {},
+            connect_args=(
+                {"check_same_thread": False} if "sqlite" in original_url else {}
+            ),
             pool_pre_ping=True,
         )
         database.SessionLocal = sessionmaker(
             autocommit=False, autoflush=False, bind=database.engine
         )
+
 
 def test_get_db_session():
     """
@@ -56,6 +61,7 @@ def test_get_db_session():
         except StopIteration:
             pass
 
+
 def test_get_db_rollback_on_error():
     """
     Test that get_db() rolls back the session if a SQLAlchemyError occurs.
@@ -73,17 +79,25 @@ def test_get_db_rollback_on_error():
         except StopIteration:
             pass
 
+
 def test_use_local_db_flag(monkeypatch):
     """
     Test that USE_LOCAL_DB correctly detects SQLite URLs.
     """
     monkeypatch.setattr(database.settings, "DATABASE_URL_LOCAL", "sqlite:///./test.db")
+    reload(database)
     assert "sqlite" in database.settings.DATABASE_URL_LOCAL
     assert database.USE_LOCAL_DB is True
 
-    monkeypatch.setattr(database.settings, "DATABASE_URL_LOCAL", "postgresql+psycopg2://user:pass@localhost/db")
+    monkeypatch.setattr(
+        database.settings,
+        "DATABASE_URL_LOCAL",
+        "postgresql+psycopg2://user:pass@localhost/db",
+    )
+    reload(database)
     use_local = "sqlite" in database.settings.DATABASE_URL_LOCAL
     assert use_local is False
+
 
 def test_session_local_creates_session():
     """

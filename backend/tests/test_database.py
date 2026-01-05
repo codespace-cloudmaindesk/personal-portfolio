@@ -1,4 +1,3 @@
-import pytest
 from importlib import reload
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, Session
@@ -62,22 +61,22 @@ def test_get_db_session():
             pass
 
 
-def test_get_db_rollback_on_error():
+def test_get_db_rollback_on_error(mocker):
     """
-    Test that get_db() rolls back the session if a SQLAlchemyError occurs.
+    Test that get_db() rolls back the session if commit fails.
     """
     test_url = "sqlite:///:memory:"
     with override_database_url(test_url):
         db_gen = database.get_db()
         db: Session = next(db_gen)
-        # Force an invalid SQL to trigger SQLAlchemyError
-        with pytest.raises(SQLAlchemyError):
-            db.execute(text("SELECT * FROM non_existent_table"))
-        # Generator cleanup
+        # Mock commit to raise an exception
+        mocker.patch.object(db, "commit", side_effect=SQLAlchemyError("Commit failed"))
+        rollback_spy = mocker.spy(db, "rollback")
         try:
-            next(db_gen)
-        except StopIteration:
+            next(db_gen)  # this triggers commit inside get_db()
+        except Exception:
             pass
+        rollback_spy.assert_called_once()
 
 
 def test_use_local_db_flag(monkeypatch):

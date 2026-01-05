@@ -12,7 +12,7 @@ ENV_VARS = {
     "REFRESH_TOKEN_EXPIRE_DAYS": "7",
     "DATABASE_URL": "sqlite:///./test.db",
     "DATABASE_URL_LOCAL": "sqlite:///./test_local.db",
-    "BACKEND_CORS_ORIGINS": "http://localhost:3000,http://localhost:5173",
+    "BACKEND_CORS_ORIGINS": '["http://localhost:3000","http://localhost:5173"]',
     "RATE_LIMIT_LOGIN": "5",
 }
 
@@ -31,6 +31,11 @@ def test_settings_load(monkeypatch):
 
 
 def test_missing_required_field(monkeypatch):
+    # Patch model_config to ignore .env file
+    current_config = Settings.model_config.copy()
+    current_config["env_file"] = ".nonexistent"
+    monkeypatch.setattr(Settings, "model_config", current_config)
+    
     for k in ENV_VARS.keys():
         monkeypatch.delenv(k, raising=False)
     with pytest.raises(Exception):

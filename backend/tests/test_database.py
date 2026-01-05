@@ -3,7 +3,7 @@ from importlib import reload
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.exc import SQLAlchemyError
-from app import database
+from app.core import database
 from contextlib import contextmanager
 
 

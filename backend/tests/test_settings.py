@@ -35,7 +35,7 @@ def test_missing_required_field(monkeypatch):
     current_config = Settings.model_config.copy()
     current_config["env_file"] = ".nonexistent"
     monkeypatch.setattr(Settings, "model_config", current_config)
-    
+
     for k in ENV_VARS.keys():
         monkeypatch.delenv(k, raising=False)
     with pytest.raises(Exception):

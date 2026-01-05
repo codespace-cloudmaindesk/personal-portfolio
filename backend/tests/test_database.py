@@ -94,8 +94,8 @@ def test_use_local_db_flag(monkeypatch):
         "postgresql+psycopg2://user:pass@localhost/db",
     )
     reload(database)
-    use_local = "sqlite" in database.settings.DATABASE_URL_LOCAL
-    assert use_local is False
+    assert "sqlite" not in database.settings.DATABASE_URL_LOCAL
+    assert database.USE_LOCAL_DB is False
 
 
 def test_session_local_creates_session():

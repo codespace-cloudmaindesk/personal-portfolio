@@ -1,4 +1,5 @@
 from pydantic_settings import BaseSettings
+from pydantic import field_validator
 
 
 class Settings(BaseSettings):
@@ -22,6 +23,13 @@ class Settings(BaseSettings):
     ALGORITHM: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int
     REFRESH_TOKEN_EXPIRE_DAYS: int
+
+    @field_validator('SECRET_KEY')
+    @classmethod
+    def validate_secret_key(cls, v: str) -> str:
+        if not v or len(v) < 32:
+            raise ValueError('SECRET_KEY must be at least 32 characters long')
+        return v
 
     # Database
     DATABASE_URL: str

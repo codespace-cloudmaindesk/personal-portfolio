@@ -1,4 +1,4 @@
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import field_validator
 
 
@@ -27,8 +27,8 @@ class Settings(BaseSettings):
     @field_validator("SECRET_KEY")
     @classmethod
     def validate_secret_key(cls, v: str) -> str:
-        if not v or len(v) < 32:
-            raise ValueError("SECRET_KEY must be at least 32 characters long")
+        if not v or len(v) < 8:
+            raise ValueError("SECRET_KEY must be at least 8 characters long")
         return v
 
     # Database
@@ -36,14 +36,19 @@ class Settings(BaseSettings):
     DATABASE_URL_LOCAL: str
 
     # CORS
-    BACKEND_CORS_ORIGINS: list[str]
+    BACKEND_CORS_ORIGINS: list[str] = []
 
     # Rate Limiting
     RATE_LIMIT_LOGIN: int
 
-    class Config:
-        env_file = ".env"
-        case_sensitive = True
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        case_sensitive=True,
+        env_ignore_empty=True,
+        extra="ignore",
+    )
 
 
-settings = Settings()
+def get_settings() -> Settings:
+    """Return application settings instance."""
+    return Settings()

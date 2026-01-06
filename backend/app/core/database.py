@@ -1,21 +1,24 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy.orm import sessionmaker
-from app.core.config import settings
+from app.core.config import get_settings
 
-USE_LOCAL_DB = "sqlite" in settings.DATABASE_URL_LOCAL
+settings = get_settings()
 
-"""
-Determine whether to use the local SQLite database or the production PostgreSQL database.
 
-- True → Use SQLite (local development or testing)
-- False → Use PostgreSQL (production / Docker / cloud)
-"""
-DATABASE_URL = settings.DATABASE_URL_LOCAL if USE_LOCAL_DB else settings.DATABASE_URL
+def get_use_local_db() -> bool:
+    """Check if the local database (SQLite) should be used."""
+    return "sqlite" in settings.DATABASE_URL_LOCAL
+
+
+def get_database_url() -> str:
+    """Return the active database URL depending on USE_LOCAL_DB."""
+    return settings.DATABASE_URL_LOCAL if get_use_local_db() else settings.DATABASE_URL
+
 
 engine = create_engine(
-    DATABASE_URL,
-    connect_args={"check_same_thread": False} if "sqlite" in DATABASE_URL else {},
+    get_database_url(),
+    connect_args={"check_same_thread": False} if "sqlite" in get_database_url() else {},
     pool_pre_ping=True,
 )
 
